@@ -308,5 +308,3 @@ module __hu_cube(size = 1, chamfers){
         chamfered_cube(size, chamfer_percent=chamfers);
     }
 }
-
-hypercube_unfolding(1);
