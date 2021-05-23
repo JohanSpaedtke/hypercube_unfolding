@@ -15,7 +15,7 @@ public class BurrPieceTest
     {
         var piece = BurrPiece.from(Set.of(Point.from(0)));
 
-        Assert.assertEquals("[\"x\"]", piece.toPuzzlecad());
+        Assert.assertEquals("[\"x\"]", piece.toBurrSpec());
     }
 
     @Test
@@ -23,7 +23,7 @@ public class BurrPieceTest
     {
         var piece = BurrPiece.from("...|...|...", "...|.x.|...", "...|...|...");
 
-        Assert.assertEquals("[\"x\"]", piece.toPuzzlecad());
+        Assert.assertEquals("[\"x\"]", piece.toBurrSpec());
     }
 
     @Test
@@ -31,7 +31,7 @@ public class BurrPieceTest
     {
         var piece = BurrPiece.from(Set.of(Point.from(0), Point.from(1)));
 
-        Assert.assertEquals("[\"xx\"]", piece.toPuzzlecad());
+        Assert.assertEquals("[\"xx\"]", piece.toBurrSpec());
     }
 
     @Test
@@ -39,7 +39,7 @@ public class BurrPieceTest
     {
         var piece = BurrPiece.from(Set.of(Point.from(0, 0), Point.from(0, 1)));
 
-        Assert.assertEquals("[\"x|x\"]", piece.toPuzzlecad());
+        Assert.assertEquals("[\"x|x\"]", piece.toBurrSpec());
     }
 
     @Test
@@ -47,7 +47,7 @@ public class BurrPieceTest
     {
         var piece = BurrPiece.from(Set.of(Point.from(0, 0, 0), Point.from(0, 0, 1)));
 
-        Assert.assertEquals("[\"x\", \"x\"]", piece.toPuzzlecad());
+        Assert.assertEquals("[\"x\", \"x\"]", piece.toBurrSpec());
     }
 
     @Test
@@ -57,7 +57,7 @@ public class BurrPieceTest
                 Point.from(0, 0, 0), Point.from(1, 0, 0),
                 Point.from(0, 1, 0), Point.from(1, 1, 0)));
 
-        Assert.assertEquals("[\"xx|xx\"]", piece.toPuzzlecad());
+        Assert.assertEquals("[\"xx|xx\"]", piece.toBurrSpec());
     }
 
     @Test
@@ -67,7 +67,7 @@ public class BurrPieceTest
                 Point.from(0, 0, 0), Point.from(1, 0, 0),
                 Point.from(0, 0, 1), Point.from(1, 0, 1)));
 
-        Assert.assertEquals("[\"xx\", \"xx\"]", piece.toPuzzlecad());
+        Assert.assertEquals("[\"xx\", \"xx\"]", piece.toBurrSpec());
     }
 
     @Test
@@ -77,7 +77,7 @@ public class BurrPieceTest
                 Point.from(0, 0, 0), Point.from(0, 1, 0),
                 Point.from(0, 0, 1), Point.from(0, 1, 1)));
 
-        Assert.assertEquals("[\"x|x\", \"x|x\"]", piece.toPuzzlecad());
+        Assert.assertEquals("[\"x|x\", \"x|x\"]", piece.toBurrSpec());
     }
 
     @Test
@@ -89,7 +89,7 @@ public class BurrPieceTest
                 Point.from(1, 1, 0), Point.from(1, 0, 1),
                 Point.from(0, 1, 1), Point.from(1, 1, 1)));
 
-        Assert.assertEquals("[\"xx|xx\", \"xx|xx\"]", piece.toPuzzlecad());
+        Assert.assertEquals("[\"xx|xx\", \"xx|xx\"]", piece.toBurrSpec());
     }
 
     @Test
@@ -101,7 +101,7 @@ public class BurrPieceTest
                 Point.from(-1, -1, 0), Point.from(-1, 0, -1),
                 Point.from(0, -1, -1), Point.from(-1, -1, -1)));
 
-        Assert.assertEquals("[\"xx|xx\", \"xx|xx\"]", piece.toPuzzlecad());
+        Assert.assertEquals("[\"xx|xx\", \"xx|xx\"]", piece.toBurrSpec());
     }
 
     @Test
@@ -112,7 +112,7 @@ public class BurrPieceTest
                 Point.from(0, 0, 0), Point.from(1, 0, 0),
                 Point.from(2, 0, 0)));
 
-        Assert.assertEquals("[\"xxxxx\"]", piece.toPuzzlecad());
+        Assert.assertEquals("[\"xxxxx\"]", piece.toBurrSpec());
     }
 
     @Test
@@ -122,7 +122,48 @@ public class BurrPieceTest
                 Point.from(0, 1), Point.from(0, 2), Point.from(0, 3),
                 Point.from(0, 0, 1), Point.from(0, 0, 2), Point.from(0, 0, 3));
         var piece = BurrPiece.from(points);
-        System.out.println(piece.toPuzzlecad());
+        System.out.println(piece.toBurrSpec());
         Assert.assertEquals(points, piece.toPoints());
+    }
+
+    @Test
+    public void dummy()
+    {
+        var cubeSize = 10;
+        var points = new HashSet<Point>();
+        for (int x = 0; x < cubeSize; x++)
+        {
+            for (int y = 0; y < cubeSize; y++)
+            {
+                for (int z = 0; z < cubeSize; z++)
+                {
+                    if (Math.random() < 0.5)
+                    {
+                        points.add(Point.from(x, y, z));
+                    }
+                }
+            }
+        }
+        System.out.println(BurrPiece.from(points).toPuzzlecad());
+    }
+
+    @Test
+    public void diagonal(){
+        var cubeSize = 16;
+        var points = new HashSet<Point>();
+        for (int x = 0; x < cubeSize; x++)
+        {
+            for (int y = 0; y < cubeSize; y++)
+            {
+                for (int z = 0; z < cubeSize; z++)
+                {
+                    if (x==y&&y==z)
+                    {
+                        points.add(Point.from(x, y, z));
+                    }
+                }
+            }
+        }
+        System.out.println(BurrPiece.from(points).toBurrSpec());
     }
 }

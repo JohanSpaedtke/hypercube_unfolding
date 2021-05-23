@@ -8,6 +8,9 @@ import java.util.stream.Collectors;
 
 public final class BurrPiece
 {
+    private static final String NEW_LINE = "\n";
+    private static final String SPACE = " ";
+
     private final int[][][] voxels;
 
     private BurrPiece(int[][][] voxels)
@@ -108,21 +111,64 @@ public final class BurrPiece
         return points;
     }
 
-    public String toPuzzlecad()
+    /**
+     * Generates the complete burr spec for the piece.
+     * Puzzlecad isn't really designed for really large pieces though so at some point you probably won't be able to use this method directly
+     * and should instead use {@link BurrPiece#toPuzzlecad()} instead
+     *
+     * @return a String that is a valid argument to the burr_piece method of puzzlecad
+     */
+    public String toBurrSpec()
     {
-        return "[\"" + String.join("\", \"", toBurrSpec()) + "\"]";
+        return "[\"" + _burr_spec().stream()
+                .map(xyPlane -> String.join("|", xyPlane))
+                .reduce("", (s1, s2) -> s1.equals("") ? s2 : s1 + "\", \"" + s2) + "\"]";
     }
 
-    private List<String> toBurrSpec()
+    /**
+     * Breaks up your burr piece in to multiple lines of voxels since those are much less taxing on puzzlecad.
+     * This comes with some restrictions though. The $auto_layout functionality will obviously no longer work since
+     * as far puzzlecad is concerned the piecese are not connected. Also there will be internal beveling on the pieces
+     * between the lines for the same reason. A workaround for the latter issue is to either use no bevel or use $unit_beveled=true
+     *
+     * @return a String describing a number of calls to the burr_piece method of puzzlecad and builtin OpenSCAD methods
+     */
+    public String toPuzzlecad()
+    {
+        double burr_scale = 11.15;
+        boolean unit_beveled = true;
+        var puzzlecad = new StringBuilder();
+        puzzlecad.append("$burr_scale = ").append(burr_scale).append(";").append(NEW_LINE);
+        puzzlecad.append("$unit_beveled = ").append(unit_beveled).append(";").append(NEW_LINE);
+        var spec = _burr_spec();
+        for (int z = 0; z < spec.size(); z++)
+        {
+            var xyPlane = spec.get(z);
+            for (int y = 0; y < xyPlane.size(); y++)
+            {
+                var xLine = xyPlane.get(y);
+                var numStartingDots = xLine.indexOf("x");
+                puzzlecad.append("translate([").append(numStartingDots).append(" * $burr_scale")
+                        .append(",").append(y).append(" * $burr_scale")
+                        .append(",").append(z).append(" * $burr_scale")
+                        .append("])").append(SPACE)
+                        .append("burr_piece(\"").append(xLine).append("\");")
+                        .append(NEW_LINE);
+            }
+        }
+        return puzzlecad.toString();
+    }
+
+    private List<List<String>> _burr_spec()
     {
         if (voxels == null)
         {
             return List.of();
         }
-        var xyPlanes = new ArrayList<String>();
+        var xyPlanes = new ArrayList<List<String>>(voxels[0][0].length);
         for (int z = 0; z < voxels[0][0].length; z++)
         {
-            var xyPlane = new String[voxels[0].length];
+            var xyPlane = new ArrayList<String>(voxels[0].length);
             for (int y = 0; y < voxels[0].length; y++)
             {
                 var line = new StringBuilder();
@@ -137,9 +183,9 @@ public final class BurrPiece
                         line.append(".");
                     }
                 }
-                xyPlane[y] = line.toString();
+                xyPlane.add(line.toString());
             }
-            xyPlanes.add(String.join("|", xyPlane));
+            xyPlanes.add(xyPlane);
         }
         return xyPlanes;
     }
