@@ -4,7 +4,6 @@ package se.spaedtke;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.HashSet;
 import java.util.Set;
 
 public class BurrPieceTest
@@ -124,46 +123,5 @@ public class BurrPieceTest
         var piece = BurrPiece.from(points);
         System.out.println(piece.toBurrSpec());
         Assert.assertEquals(points, piece.toPoints());
-    }
-
-    @Test
-    public void dummy()
-    {
-        var cubeSize = 10;
-        var points = new HashSet<Point>();
-        for (int x = 0; x < cubeSize; x++)
-        {
-            for (int y = 0; y < cubeSize; y++)
-            {
-                for (int z = 0; z < cubeSize; z++)
-                {
-                    if (Math.random() < 0.5)
-                    {
-                        points.add(Point.from(x, y, z));
-                    }
-                }
-            }
-        }
-        System.out.println(BurrPiece.from(points).toPuzzlecad());
-    }
-
-    @Test
-    public void diagonal(){
-        var cubeSize = 16;
-        var points = new HashSet<Point>();
-        for (int x = 0; x < cubeSize; x++)
-        {
-            for (int y = 0; y < cubeSize; y++)
-            {
-                for (int z = 0; z < cubeSize; z++)
-                {
-                    if (x==y&&y==z)
-                    {
-                        points.add(Point.from(x, y, z));
-                    }
-                }
-            }
-        }
-        System.out.println(BurrPiece.from(points).toBurrSpec());
     }
 }
