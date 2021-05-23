@@ -4,99 +4,125 @@ package se.spaedtke;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.HashSet;
 import java.util.Set;
 
-public class BurrPieceTest {
+public class BurrPieceTest
+{
 
     @Test
-    public void canHandlePoint(){
+    public void canHandlePoint()
+    {
         var piece = BurrPiece.from(Set.of(Point.from(0)));
 
-        Assert.assertEquals("[\"x\"]", piece.toBurrSpec());
+        Assert.assertEquals("[\"x\"]", piece.toPuzzlecad());
     }
 
     @Test
-    public void canHandleXLine(){
+    public void canHandleUncompactedPoint()
+    {
+        var piece = BurrPiece.from("...|...|...", "...|.x.|...", "...|...|...");
+
+        Assert.assertEquals("[\"x\"]", piece.toPuzzlecad());
+    }
+
+    @Test
+    public void canHandleXLine()
+    {
         var piece = BurrPiece.from(Set.of(Point.from(0), Point.from(1)));
 
-        Assert.assertEquals("[\"xx\"]", piece.toBurrSpec());
+        Assert.assertEquals("[\"xx\"]", piece.toPuzzlecad());
     }
 
     @Test
-    public void canHandleYLine(){
-        var piece = BurrPiece.from(Set.of(Point.from(0,0),Point.from(0,1)));
+    public void canHandleYLine()
+    {
+        var piece = BurrPiece.from(Set.of(Point.from(0, 0), Point.from(0, 1)));
 
-        Assert.assertEquals("[\"x.|x\"]", piece.toBurrSpec());
+        Assert.assertEquals("[\"x|x\"]", piece.toPuzzlecad());
     }
 
     @Test
-    public void canHandleZLine(){
-        var piece = BurrPiece.from(Set.of(Point.from(0,0,0),Point.from(0,0,1)));
+    public void canHandleZLine()
+    {
+        var piece = BurrPiece.from(Set.of(Point.from(0, 0, 0), Point.from(0, 0, 1)));
 
-        Assert.assertEquals("[\"x\", \"x\"]", piece.toBurrSpec());
+        Assert.assertEquals("[\"x\", \"x\"]", piece.toPuzzlecad());
     }
 
     @Test
-    public void canHandleXYPlane(){
+    public void canHandleXYPlane()
+    {
         var piece = BurrPiece.from(Set.of(
-                Point.from(new int[]{0,0,0}),Point.from(new int[]{1,0,0}),
-                Point.from(new int[]{0,1,0}),Point.from(new int[]{1,1,0})));
+                Point.from(0, 0, 0), Point.from(1, 0, 0),
+                Point.from(0, 1, 0), Point.from(1, 1, 0)));
 
-        Assert.assertEquals("[\"xx|xx\"]", piece.toBurrSpec());
+        Assert.assertEquals("[\"xx|xx\"]", piece.toPuzzlecad());
     }
 
     @Test
-    public void canHandleXZPlane(){
+    public void canHandleXZPlane()
+    {
         var piece = BurrPiece.from(Set.of(
-                Point.from(new int[]{0,0,0}),Point.from(new int[]{1,0,0}),
-                Point.from(new int[]{0,0,1}),Point.from(new int[]{1,0,1})));
+                Point.from(0, 0, 0), Point.from(1, 0, 0),
+                Point.from(0, 0, 1), Point.from(1, 0, 1)));
 
-        Assert.assertEquals("[\"xx\", \"xx\"]", piece.toBurrSpec());
+        Assert.assertEquals("[\"xx\", \"xx\"]", piece.toPuzzlecad());
     }
 
     @Test
-    public void canHandleYZPlane(){
+    public void canHandleYZPlane()
+    {
         var piece = BurrPiece.from(Set.of(
-                Point.from(new int[]{0,0,0}),Point.from(new int[]{0,1,0}),
-                Point.from(new int[]{0,0,1}),Point.from(new int[]{0,1,1})));
+                Point.from(0, 0, 0), Point.from(0, 1, 0),
+                Point.from(0, 0, 1), Point.from(0, 1, 1)));
 
-        Assert.assertEquals("[\"x.|x\", \"x.|x\"]", piece.toBurrSpec());
+        Assert.assertEquals("[\"x|x\", \"x|x\"]", piece.toPuzzlecad());
     }
 
     @Test
-    public void canHandleCube(){
+    public void canHandleCube()
+    {
         var piece = BurrPiece.from(Set.of(
-                Point.from(new int[]{0,0,0}),Point.from(new int[]{0,1,0}),
-                Point.from(new int[]{0,0,1}),Point.from(new int[]{1,0,0}),
-                Point.from(new int[]{1,1,0}),Point.from(new int[]{1,0,1}),
-                Point.from(new int[]{0,1,1}),Point.from(new int[]{1,1,1})));
+                Point.from(0, 0, 0), Point.from(0, 1, 0),
+                Point.from(0, 0, 1), Point.from(1, 0, 0),
+                Point.from(1, 1, 0), Point.from(1, 0, 1),
+                Point.from(0, 1, 1), Point.from(1, 1, 1)));
 
-        Assert.assertEquals("[\"xx|xx\", \"xx|xx\"]", piece.toBurrSpec());
+        Assert.assertEquals("[\"xx|xx\", \"xx|xx\"]", piece.toPuzzlecad());
     }
 
     @Test
-    public void canHandleNegativeCube(){
+    public void canHandleNegativeCube()
+    {
         var piece = BurrPiece.from(Set.of(
-                Point.from(new int[]{0,0,0}),Point.from(new int[]{0,-1,0}),
-                Point.from(new int[]{0,0,-1}),Point.from(new int[]{-1,0,0}),
-                Point.from(new int[]{-1,-1,0}),Point.from(new int[]{-1,0,-1}),
-                Point.from(new int[]{0,-1,-1}),Point.from(new int[]{-1,-1,-1})));
+                Point.from(0, 0, 0), Point.from(0, -1, 0),
+                Point.from(0, 0, -1), Point.from(-1, 0, 0),
+                Point.from(-1, -1, 0), Point.from(-1, 0, -1),
+                Point.from(0, -1, -1), Point.from(-1, -1, -1)));
 
-        Assert.assertEquals("[\"xx|xx\", \"xx|xx\"]", piece.toBurrSpec());
+        Assert.assertEquals("[\"xx|xx\", \"xx|xx\"]", piece.toPuzzlecad());
     }
 
     @Test
-    public void canHandleLinePassingThroughOrigin(){
+    public void canHandleLinePassingThroughOrigin()
+    {
         var piece = BurrPiece.from(Set.of(
-                Point.from(new int[]{-2,0,0}),Point.from(new int[]{-1,0,0}),
-                Point.from(new int[]{0,0,0}),Point.from(new int[]{1,0,0}),
-                Point.from(new int[]{2,0,0})));
+                Point.from(-2, 0, 0), Point.from(-1, 0, 0),
+                Point.from(0, 0, 0), Point.from(1, 0, 0),
+                Point.from(2, 0, 0)));
 
-        Assert.assertEquals("[\"xxxxx\"]", piece.toBurrSpec());
+        Assert.assertEquals("[\"xxxxx\"]", piece.toPuzzlecad());
     }
 
     @Test
-    public void dummy(){
-        System.out.println(BurrPiece.from(Constants.UNFOLDINGS[4]).toBurrSpec());
+    public void canRoundTripPositivePoints()
+    {
+        var points = Set.of(Point.from(0), Point.from(1), Point.from(2),
+                Point.from(0, 1), Point.from(0, 2), Point.from(0, 3),
+                Point.from(0, 0, 1), Point.from(0, 0, 2), Point.from(0, 0, 3));
+        var piece = BurrPiece.from(points);
+        System.out.println(piece.toPuzzlecad());
+        Assert.assertEquals(points, piece.toPoints());
     }
 }
